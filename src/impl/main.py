@@ -24,7 +24,22 @@ THREAD_POOL = pool.ThreadPool(10)
 
 # 请求方法
 def req_url(url):
-    return requests.get(url).text
+    headers = {
+        # 'Cookie': '[{"key":"Cookie","value":"bid=oGHtJV6PDAA; gr_user_id=1056759e-f21b-4013-b2ed-96f4481d1fec; '
+        #           '_vwo_uuid_v2=D43B407C018C1A69AEA81B9F795095DBF|5ab7257a253e7759bdf77079d526630c; ct=y;'
+        #           ' _pk_ref.%s.8290=%5B%22book_nav_freyr%22%2C%22%22%2C1554277087%2C%22https%3A%2F%2F'
+        #           'book.douban.com%2Fsubject%2F30330292%2F%22%5D; _ga=GA1.3.1622773355.1554270623; _'
+        #           'pk_id.%s.8290=b623c925f4acd59c.1554277087.1.1554277247.1554277087.; '
+        #           'll=\"108288\"; viewed=\"30455321_26896878_5916880_26293007_10768068_1066479_2066479_3066479_'
+        #           '3066478_3066477\"; dbcl2=\"194402965:MX1pBUHa+Zo\"; __utmz=30149280.1554368263.8.2.'
+        #           'utmcsr=open.weixin.qq.com|utmccn=(referral)|utmcmd=referral|utmcct=/connect/qrconnect; '
+        #           'push_noty_num=0; push_doumail_num=0; ck=6RIy; __'
+        #           'utma=30149280.1622773355.1554270623.1554370364.1554888327.10; __'
+        #           'utmc=30149280; __utmt_douban=1; ap_v=0,6.0; __utmb=30149280.2.10.1554888327",'
+        #           '"description":"","type":"text","enabled":true}]'
+    }
+    proxies={'https':'119.102.189.1:9999'}
+    return requests.get(url, proxies=proxies,timeout=10).text
 
 
 # 记录代办的标签列表
@@ -43,6 +58,7 @@ def load_tag(tag, page_start):
 
     data = req_url(url)
     s = etree.HTML(data)
+    print("当前请求IP地址为："+ str(etree.tostring(s), encoding = "utf8"))
 
     # 扫描相关的标签并记录
     ref_tags = s.xpath('//*[@class="tags-list"]/a/text()')
