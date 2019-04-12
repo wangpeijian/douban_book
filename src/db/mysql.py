@@ -69,7 +69,7 @@ def update_tag_done(name):
     connection.close()
 
 
-def fond_todo_tags(done):
+def find_todo_tags(done):
     connection = get_con()
     cursor = connection.cursor()
 
@@ -80,3 +80,16 @@ def fond_todo_tags(done):
     connection.close()
 
     return data
+
+
+def has_tag(tag):
+    connection = get_con()
+    cursor = connection.cursor()
+
+    sql = """select id from tags where name = '%s' """ % tag
+
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    connection.close()
+
+    return len(data) > 0
