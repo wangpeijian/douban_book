@@ -7,7 +7,6 @@ from core import worker_thread
 class ThreadExecute:
     def __init__(self, thread_size, task_size):
         self.thread_size = thread_size
-        self.event = threading.Event()
 
         # 任务队列锁
         self.task_lock = threading.Lock()
@@ -51,7 +50,6 @@ class ThreadExecute:
         self.thread_Lock.acquire()
         self.free_thread_no.append(thread_id)
         self.running_thread_no.remove(thread_id)
-        self.event.set()
         self.thread_Lock.release()
 
     # 待执行任务队列增加一个任务

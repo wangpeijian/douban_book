@@ -1,9 +1,10 @@
 import threading
-
 import time
 
+from util.logger import log
+
 # 缓存线程池缓存时间
-CACHE_TIME = 5
+CACHE_TIME = 60
 # 单次睡眠时间
 SLEEP_TIME = 0.1
 
@@ -25,10 +26,11 @@ class Worker(threading.Thread):
 
             if execute_task is not None:
                 loop = 0
+
                 try:
                     execute_task.run()
-                except Exception:
-                    print("任务执行异常！！获取新的任务执行")
+                except Exception as e:
+                    log(self.name + ",任务执行异常！！获取新的任务执行", repr(e))
             else:
                 # 没有任务可做，睡眠
                 time.sleep(SLEEP_TIME)

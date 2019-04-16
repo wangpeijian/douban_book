@@ -4,6 +4,7 @@ from core import const
 from core import execute
 from db import mysql
 from impl import http
+from util.logger import log
 
 # 定义全部标签的字典
 tag_dict = {}
@@ -34,7 +35,7 @@ def get_init_tags():
 
     tag_list = s.xpath('//*[@class="tagCol"]/tbody/tr/td/a/text()')
 
-    print(tag_list)
+    log(tag_list)
 
     # 从正常入口扫描
     for tag in tag_list:
@@ -49,17 +50,17 @@ def increment_entry():
     for item in done_tags:
         tag = item[0]
         page_start = item[1]
-        print('已经完成的tag:', tag)
+        log('已经完成的tag:', tag, page_start)
         tag_dict[tag] = page_start
-    print('======================================================')
+    log('======================================================')
 
     todo_tags = mysql.find_todo_tags(0)
     for item in todo_tags:
         tag = item[0]
         page_start = item[1]
-        print('待执行的tag:', tag)
+        log('待执行的tag:', tag, page_start)
         tag_dict_current[tag] = page_start
-    print('======================================================')
+    log('======================================================')
 
     # 没有数据时走正常拉取，从热门列表开始爬取
     if len(done_tags) == 0 and len(todo_tags) == 0:
