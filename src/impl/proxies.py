@@ -4,14 +4,14 @@ import time
 from lxml import etree
 
 from impl import http
-from repertory.proxies_address import PROXIES_IP, EFFECTIVE_PROXIES_IP_DOU_BAN, add_proxies_ip
+from repertory.proxies_address import PROXIES_IP, add_proxies_ip
 
 
 def async_do(thread_name, sleep_time):
     i = 1
     while True:
         # 如果当前代理地址过多则空转
-        if len(PROXIES_IP) > 250 or len(EFFECTIVE_PROXIES_IP_DOU_BAN) > 3:
+        if len(PROXIES_IP) > 250:
             time.sleep(sleep_time)
             continue
 
@@ -28,8 +28,12 @@ def async_do(thread_name, sleep_time):
                 tds = item.xpath('./td/text()')
                 if len(tds) != 0:
                     add_proxies_ip(tds[0] + ":" + tds[1])
-            print("待选的ip地址数量:", len(PROXIES_IP))
             i = i + 1
+
+            # 代理地址翻页数量过多，则重第一页开始扫描
+            if i > 1000:
+                i = 1
+
         except Exception:
             print("解析西刺代理页面异常：======", html, dom)
             continue
