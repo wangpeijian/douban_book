@@ -35,7 +35,9 @@ class Execute:
 
         print(url, "扫描到的列表数据", url_list)
 
+        index = 0
         for url in url_list:
+            index = index + 1
             #  根据图书详情页面链接爬取 评分，常用标签，简介， 图书名称
             detail_data = http.req_url(url)
             detail_tree = etree.HTML(detail_data)
@@ -68,9 +70,8 @@ class Execute:
 
             # 保存图书信息
             mysql.add_book(_id, _book_name, _tags, _intro, _rating, _url)
-
-        # 循环结束更新当前查询进度
-        mysql.update_tag_start(tag, page_start + len(url_list))
+            # 循环结束更新当前查询进度
+            mysql.update_tag_start(tag, page_start + index)
 
         if len(url_list) != 0:
             self.load_tag(tag, page_start + 20)

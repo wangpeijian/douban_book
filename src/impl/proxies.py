@@ -1,81 +1,38 @@
-import random
 import threading
 import time
 
 from lxml import etree
 
-from core.const import USER_AGENTS
 from impl import http
-
-# 记录全部代理地址
-PROXIES_IP = []
-
-# 记录执行成功过的代理地址，获取地址时优先从成功过的地址获取
-EFFECTIVE_PROXIES_IP = []
-
-
-def remove_proxies_ip(proxies_ip):
-    if proxies_ip in EFFECTIVE_PROXIES_IP:
-        EFFECTIVE_PROXIES_IP.remove(proxies_ip)
-
-    if proxies_ip in PROXIES_IP:
-        PROXIES_IP.remove(proxies_ip)
-
-
-def get_proxies_ip():
-    if len(EFFECTIVE_PROXIES_IP) > 0:
-        return random.choice(EFFECTIVE_PROXIES_IP)
-
-    if len(PROXIES_IP) > 0:
-        return random.choice(PROXIES_IP)
-
-    return None
-
-
-def add_proxies_ip(proxies_ip):
-    PROXIES_IP.append(proxies_ip)
-
-
-def add_effective_proxies_ip(proxies_ip):
-    EFFECTIVE_PROXIES_IP.append(proxies_ip)
+from repertory.proxies_address import PROXIES_IP, EFFECTIVE_PROXIES_IP_DOU_BAN, add_proxies_ip
 
 
 def async_do(thread_name, sleep_time):
-    headers = {
-        'User-Agent': random.choice(USER_AGENTS),
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Connection': 'keep-alive',
-        'Accept-Encoding': 'gzip, deflate',
-    }
-
     i = 1
     while True:
-
         # 如果当前代理地址过多则空转
-        if len(PROXIES_IP) > 50 or len(EFFECTIVE_PROXIES_IP) > 3:
+        if len(PROXIES_IP) > 250 or len(EFFECTIVE_PROXIES_IP_DOU_BAN) > 3:
             time.sleep(sleep_time)
-            pass
+            continue
 
-        i = i + 1
         url = 'https://www.xicidaili.com/wn/%s' % i
         print(thread_name + ":" + url)
         html = http.req_url(url)
-
         dom = etree.HTML(html)
 
-        print("==========", html)
+        try:
+            # 扫描相关的标签并记录
+            lines = dom.xpath('//*[@id="ip_list"]/tr')
 
-        # 扫描相关的标签并记录
-        lines = dom.xpath('//*[@id="ip_list"]/tr')
-
-        for item in lines:
-            tds = item.xpath('./td/text()')
-            if len(tds) != 0:
-                add_proxies_ip(tds[0] + ":" + tds[1])
-
-        time.sleep(sleep_time)
-        pass
+            for item in lines:
+                tds = item.xpath('./td/text()')
+                if len(tds) != 0:
+                    add_proxies_ip(tds[0] + ":" + tds[1])
+            print("待选的ip地址数量:", len(PROXIES_IP))
+            i = i + 1
+        except Exception:
+            print("解析西刺代理页面异常：======", html, dom)
+            continue
 
 
 # 爬取代理的ip地址
