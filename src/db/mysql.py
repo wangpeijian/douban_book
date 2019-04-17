@@ -84,6 +84,24 @@ def update_tag_done(name):
     connection.close()
 
 
+def update_tag_doing(name):
+    name = escape_str(name)
+
+    connection = get_con()
+    cursor = connection.cursor()
+
+    sql = """update tags set done = %s where name = "%s" """ % (-1, name)
+
+    try:
+        cursor.execute(sql)
+        connection.commit()
+    except Exception as e:
+        # log("sql执行异常:", e)
+        connection.rollback()
+
+    connection.close()
+
+
 def find_todo_tags(done):
     connection = get_con()
     cursor = connection.cursor()
@@ -110,3 +128,32 @@ def has_tag(tag):
     connection.close()
 
     return len(data) > 0
+
+
+def tags_reset():
+    connection = get_con()
+    cursor = connection.cursor()
+
+    sql = """update tags set done = 0 where done = -1 """
+
+    try:
+        cursor.execute(sql)
+        connection.commit()
+    except Exception as e:
+        # log("sql执行异常:", e)
+        connection.rollback()
+
+    connection.close()
+
+
+def find_todo_tags_by_page():
+    connection = get_con()
+    cursor = connection.cursor()
+
+    sql = """select name, page_start from tags where done = 0 limit 0, 10"""
+
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    connection.close()
+
+    return data

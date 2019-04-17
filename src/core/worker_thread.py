@@ -13,7 +13,7 @@ class Worker(threading.Thread):
     def __init__(self, thread_id, thread_pool):
         threading.Thread.__init__(self)
         self.thread_id = thread_id
-        self.name = "线程-%s" % thread_id
+        self.name = "book-loader-%s" % thread_id
         self.thread_pool = thread_pool
 
     # 线程运行

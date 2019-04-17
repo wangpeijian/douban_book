@@ -3,6 +3,7 @@ import time
 
 from lxml import etree
 
+from config.system import proxies_page_loop
 from config.system import proxies_thread_cycle
 from core.blocker import wake_up_worker
 from impl import http
@@ -40,7 +41,7 @@ def async_do():
 
             # 代理地址翻页数量过多，则重第一页开始扫描
             i = i + 1
-            if i > 1000:
+            if i > proxies_page_loop:
                 i = 1
 
         except Exception as e:
@@ -52,7 +53,7 @@ def async_do():
 def scan_proxies_ip():
     try:
         proxies_thread = threading.Thread(target=async_do)
-        proxies_thread.setName("Thread-proxies_ip")
+        proxies_thread.setName("proxies-loader")
         proxies_thread.start()
     except Exception as e:
         log("代理扫描任务异常：", repr(e))

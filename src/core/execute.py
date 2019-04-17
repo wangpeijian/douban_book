@@ -1,6 +1,5 @@
 from lxml import etree
 
-from core import const
 from db import mysql
 from impl import http
 from util.logger import log
@@ -19,7 +18,6 @@ class Execute:
         for tag in tags:
             if not mysql.has_tag(tag):
                 mysql.add_tag(tag)
-                const.THREAD_EXECUTE.submit(Execute(tag, 0))
 
     def load_tag(self, tag, page_start):
         url = 'https://book.douban.com/tag/' + tag + '?start=' + str(page_start) + '&type=T'
