@@ -70,5 +70,5 @@ def increment_entry():
 
 
 def test_entry():
-    tag_dict_current['港台'] = 138
+    tag_dict_current['科幻'] = 434
     scan_todo_list()
