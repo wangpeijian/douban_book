@@ -44,7 +44,7 @@ def async_do():
                 i = 1
 
         except Exception as e:
-            log("解析西刺代理页面异常：", repr(e), html)
+            log("解析西刺代理页面异常：", html)  # repr(e),
             continue
 
 

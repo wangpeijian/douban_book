@@ -55,7 +55,7 @@ def req_url(url):
                 return html
 
         except Exception as e:
-            log("接口请求异常，需要更换代理地址。", proxies_ip, repr(e))
+            log("接口请求异常，需要更换代理地址。", proxies_ip)  # , repr(e)
             # 移除错误的代理地址
             remove_proxies_ip(url, proxies_ip)
 
