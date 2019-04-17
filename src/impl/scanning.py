@@ -67,3 +67,8 @@ def increment_entry():
         get_init_tags()
 
     scan_todo_list()
+
+
+def test_entry():
+    tag_dict_current['港台'] = 138
+    scan_todo_list()

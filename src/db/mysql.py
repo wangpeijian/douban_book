@@ -3,12 +3,17 @@
 
 import pymysql
 
+from util.str_tool import escape_str
+
 
 def get_con():
     return pymysql.Connect('127.0.0.1', 'root', 'root', 'douban')
 
 
 def add_book(_id, book_name, tags, intro, rating, url):
+    book_name = escape_str(book_name)
+    tags = escape_str(tags)
+
     connection = get_con()
     cursor = connection.cursor()
 
@@ -26,6 +31,8 @@ def add_book(_id, book_name, tags, intro, rating, url):
 
 
 def add_tag(name):
+    name = escape_str(name)
+
     connection = get_con()
     cursor = connection.cursor()
 
@@ -42,6 +49,8 @@ def add_tag(name):
 
 
 def update_tag_start(name, start):
+    name = escape_str(name)
+
     connection = get_con()
     cursor = connection.cursor()
 
@@ -58,6 +67,8 @@ def update_tag_start(name, start):
 
 
 def update_tag_done(name):
+    name = escape_str(name)
+
     connection = get_con()
     cursor = connection.cursor()
 
@@ -87,6 +98,8 @@ def find_todo_tags(done):
 
 
 def has_tag(tag):
+    tag = escape_str(tag)
+
     connection = get_con()
     cursor = connection.cursor()
 
