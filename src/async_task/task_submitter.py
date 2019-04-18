@@ -4,7 +4,7 @@ import time
 from core import const
 from core import execute
 from repertory.todo_tags import take_tags
-from util.logger import info
+from util.logger import info, error
 
 
 def async_do():
@@ -24,5 +24,5 @@ def start():
         proxies_thread.setName("task-submitter")
         proxies_thread.start()
     except Exception as e:
-        info("提交任务异常：", repr(e))
+        error("提交任务异常：", repr(e))
         start()

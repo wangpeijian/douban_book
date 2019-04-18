@@ -9,7 +9,7 @@ from config.system import proxies_thread_cycle
 from core.blocker import wake_up_worker
 from impl import http
 from repertory.proxies_address import PROXIES_IP, add_proxies_ip
-from util.logger import info
+from util.logger import info, error
 
 
 def async_do():
@@ -57,5 +57,5 @@ def start():
         proxies_thread.setName("proxies-loader")
         proxies_thread.start()
     except Exception as e:
-        info("代理扫描任务异常：", repr(e))
+        error("代理扫描任务异常：", repr(e))
         start()

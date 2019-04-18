@@ -1,7 +1,7 @@
 import threading
 import time
 
-from util.logger import info
+from util.logger import error
 
 # 缓存线程池缓存时间
 CACHE_TIME = 60
@@ -30,7 +30,7 @@ class Worker(threading.Thread):
                 try:
                     execute_task.run()
                 except Exception as e:
-                    info(self.name + ",任务执行异常！！获取新的任务执行", repr(e))
+                    error(self.name + ",任务执行异常！！获取新的任务执行", repr(e))
             else:
                 # 没有任务可做，睡眠
                 time.sleep(SLEEP_TIME)

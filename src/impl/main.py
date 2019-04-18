@@ -66,5 +66,10 @@ def increment_entry():
 
 # 测试入口
 def test_entry():
-    put_tags("科幻", 456)
+    put_tags("女性/性别", 0)
+
+    # 开启代理地址加载任务
+    proxies_loader.start()
+
+    # 扫描待办任务
     task_submitter.start()

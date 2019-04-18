@@ -1,7 +1,8 @@
 # 定义日志级别
 log_level = {
     'debug': False,
-    'info': True
+    'info': True,
+    'error': True,
 }
 
 # 启动的工作线程数量

@@ -3,7 +3,7 @@ import threading
 from config.system import collection_tag_page_size
 from db import mysql
 from repertory.todo_tags import put_tags, get_todo_list_size, TODO_LIST_WAIT
-from util.logger import info
+from util.logger import info, error
 
 
 def async_do():
@@ -30,5 +30,5 @@ def start():
         proxies_thread.setName("tag-loader")
         proxies_thread.start()
     except Exception as e:
-        info("待办任务获取异常：", repr(e))
+        error("待办任务获取异常：", repr(e))
         start()

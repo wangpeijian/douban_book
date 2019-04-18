@@ -3,6 +3,7 @@ from lxml import etree
 from db import mysql
 from impl import http
 from util.logger import info
+from util.str_tool import escape_url
 
 
 class Execute:
@@ -20,7 +21,7 @@ class Execute:
                 mysql.add_tag(tag)
 
     def load_tag(self, tag, page_start):
-        url = 'https://book.douban.com/tag/' + tag + '?start=' + str(page_start) + '&type=T'
+        url = 'https://book.douban.com/tag/' + escape_url(tag) + '?start=' + str(page_start) + '&type=T'
         info(url)
 
         data = http.req_url(url)
