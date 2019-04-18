@@ -3,11 +3,12 @@
 
 import pymysql
 
+from config.system import db_host, db_user, db_password, db_data_base
 from util.str_tool import escape_str
 
 
 def get_con():
-    return pymysql.Connect('127.0.0.1', 'root', 'root', 'douban')
+    return pymysql.Connect(db_host, db_user, db_password, db_data_base)
 
 
 def add_book(_id, book_name, tags, intro, rating, url):

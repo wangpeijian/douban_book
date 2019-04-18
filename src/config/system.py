@@ -5,6 +5,12 @@ log_level = {
     'error': True,
 }
 
+# 数据库配置信息
+db_host = '127.0.0.1'
+db_user = 'root'
+db_password = 'root'
+db_data_base = 'douban'
+
 # 启动的工作线程数量
 workers = 20
 
