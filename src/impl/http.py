@@ -6,7 +6,7 @@ from lxml import etree
 from core.blocker import WORKER_WAIT
 from core.const import USER_AGENTS
 from repertory.proxies_address import get_proxies_ip, remove_proxies_ip, add_effective_proxies_ip
-from util.logger import log
+from util.logger import info
 from util.url_tool import is_douban, is_xici, is_douban_list, is_douban_detail
 
 
@@ -45,7 +45,7 @@ def req_url(url):
 
             # 判断接口返回数据是否正常，错误的数据则更换代理重新拉取
             if result_has_error(url, dom, proxies_ip):
-                log("错误的代理地址， ", proxies_ip, html)
+                info("错误的代理地址， ", proxies_ip, html)
                 remove_proxies_ip(url, proxies_ip)
                 continue
 
@@ -55,7 +55,7 @@ def req_url(url):
                 return html
 
         except Exception as e:
-            log("接口请求异常，需要更换代理地址。", proxies_ip)  # , repr(e)
+            info("接口请求异常，需要更换代理地址。", proxies_ip)  # , repr(e)
             # 移除错误的代理地址
             remove_proxies_ip(url, proxies_ip)
 
@@ -74,21 +74,21 @@ def check_douban_result(url, dom, proxies_ip):
     error403 = dom.xpath('//center/h1/text()')
     # 判断接口返回数据是否正常，错误的数据则更换代理重新拉取
     if "".join(error403).find('403 Forbidden') != -1:
-        log("ip被屏蔽，更换代理继续查询。", proxies_ip)
+        info("ip被屏蔽，更换代理继续查询。", proxies_ip)
         return True
 
     # 校验列表是否查询成功
     if is_douban_list(url):
         error_list = dom.xpath('//*[@id="content"]/h1/text()')
         if "".join(error_list).find('豆瓣图书标签:') == -1:
-            log("ip被屏蔽，列表查询数据异常。", proxies_ip)
+            info("ip被屏蔽，列表查询数据异常。", proxies_ip)
             return True
 
     # 校验详情页面是否成功
     if is_douban_detail(url):
         title = dom.xpath('//*[@id="wrapper"]/h1/span/text()')
         if len(title) == 0:
-            log("ip被屏蔽，详情页面查询数据异常。", proxies_ip)
+            info("ip被屏蔽，详情页面查询数据异常。", proxies_ip)
             return True
 
     return False

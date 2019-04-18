@@ -2,7 +2,7 @@ from lxml import etree
 
 from db import mysql
 from impl import http
-from util.logger import log
+from util.logger import info
 
 
 class Execute:
@@ -21,7 +21,7 @@ class Execute:
 
     def load_tag(self, tag, page_start):
         url = 'https://book.douban.com/tag/' + tag + '?start=' + str(page_start) + '&type=T'
-        log(url)
+        info(url)
 
         data = http.req_url(url)
         s = etree.HTML(data)
@@ -32,7 +32,7 @@ class Execute:
 
         url_list = s.xpath('//*[@class="subject-item"]/div/h2/a/@href')
 
-        log(url, "扫描到的列表数据:", url_list)
+        info(url, "扫描到的列表数据:", url_list)
 
         index = 0
         for url in url_list:
@@ -58,7 +58,7 @@ class Execute:
             _rating = "".join(rating).strip()
             _url = url
 
-            log(
+            info(
                 '图书链接：', url,
                 '图书id：', _id,
                 '图书名称：', _book_name,

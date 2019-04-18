@@ -5,7 +5,7 @@ from impl import book_scan
 from impl import http
 from impl import task_loader
 from repertory.todo_tags import put_tags
-from util.logger import log
+from util.logger import info
 
 
 # 爬取热门标签列表
@@ -17,7 +17,7 @@ def get_init_tags():
 
     tag_list = s.xpath('//*[@class="tagCol"]/tbody/tr/td/a/text()')
 
-    log(tag_list)
+    info(tag_list)
 
     # 从正常入口扫描
     for tag in tag_list:
@@ -37,13 +37,13 @@ def print_task_progress():
     done_size = len(done_tags)
     todo_size = len(todo_tags)
 
-    log('======================================================')
-    log('已经完成的tag:', done_size)
-    log('======================================================')
+    info('======================================================')
+    info('已经完成的tag:', done_size)
+    info('======================================================')
 
-    log('======================================================')
-    log('待执行的tag:', todo_size)
-    log('======================================================')
+    info('======================================================')
+    info('待执行的tag:', todo_size)
+    info('======================================================')
     return done_size, todo_size
 
 

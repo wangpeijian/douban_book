@@ -146,11 +146,11 @@ def tags_reset():
     connection.close()
 
 
-def find_todo_tags_by_page():
+def find_todo_tags_by_page(page_size):
     connection = get_con()
     cursor = connection.cursor()
 
-    sql = """select name, page_start from tags where done = 0 limit 0, 10"""
+    sql = """select name, page_start from tags where done = 0 limit 0, %s""" % page_size
 
     cursor.execute(sql)
     data = cursor.fetchall()

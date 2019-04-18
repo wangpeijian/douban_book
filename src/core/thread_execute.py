@@ -1,7 +1,7 @@
 import threading
 
 from core import worker_thread
-from util.logger import log
+from util.logger import info
 
 
 # 缓存线程池
@@ -59,11 +59,6 @@ class ThreadExecute:
     # 待执行任务队列增加一个任务
     def add_task(self, execute):
         self.task_lock.acquire()
-
-        while len(self.execute_task) > self.task_size:
-            log("任务队列超出限制，阻塞")
-            self.execute_blocker.wait()
-
         self.execute_task.append(execute)
         self.task_lock.release()
 
@@ -76,12 +71,12 @@ class ThreadExecute:
             return None
 
         task = self.execute_task.pop(0)
+        self.task_lock.release()
 
         # 可以添加新任务，唤醒添加任务
         self.execute_blocker.set()
         self.execute_blocker.clear()
 
-        self.task_lock.release()
         return task
 
     # 添加一条工作线程
@@ -100,3 +95,7 @@ class ThreadExecute:
         # 如果有空闲线程则开启一个新线程
         if has_worker:
             self.add_worker(thread_id)
+
+        while len(self.execute_task) >= self.task_size:
+            info("任务队列超出限制，阻塞:", len(self.execute_task), self.task_size)
+            self.execute_blocker.wait()

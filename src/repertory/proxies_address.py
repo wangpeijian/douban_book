@@ -1,6 +1,6 @@
 import random
 
-from util.logger import log
+from util.logger import info
 from util.url_tool import is_douban, is_xici
 
 # 记录全部代理地址
@@ -42,7 +42,7 @@ def get_proxies_ip(url):
     if len(PROXIES_IP) > 0:
         return random.choice(PROXIES_IP)
 
-    log("没有可用的代理地址了")
+    info("没有可用的代理地址了")
     return None
 
 
@@ -60,8 +60,8 @@ def add_effective_proxies_ip(proxies_ip):
 
     if proxies_ip not in EFFECTIVE_PROXIES_IP_DOU_BAN:
         EFFECTIVE_PROXIES_IP_DOU_BAN.append(proxies_ip)
-        log("豆瓣,发现可用代理地址：", proxies_ip)
+        info("豆瓣,发现可用代理地址：", proxies_ip)
 
     if proxies_ip not in EFFECTIVE_PROXIES_IP:
         EFFECTIVE_PROXIES_IP.append(proxies_ip)
-        log("西刺,发现可用代理地址：", proxies_ip)
+        info("西刺,发现可用代理地址：", proxies_ip)

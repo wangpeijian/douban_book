@@ -32,9 +32,6 @@ def take_tags():
         tag = tag_info['tag']
         page_size = tag_info['page_size']
 
-        # 将标签设置为运行中
-        mysql.update_tag_doing(tag)
-
     tag_lock.release()
 
     return tag, page_size
@@ -44,4 +41,7 @@ def put_tags(tag, page_size):
     tag_lock.acquire()
     tag_info = {'tag': tag, 'page_size': page_size}
     TAG_TODO_LIST.append(tag_info)
+
+    # 将标签设置为运行中
+    mysql.update_tag_doing(tag)
     tag_lock.release()
