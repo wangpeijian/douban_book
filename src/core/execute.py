@@ -62,9 +62,9 @@ class Execute:
                 '图书链接：', url,
                 '图书id：', _id,
                 '图书名称：', _book_name,
-                '图书评分：', _rating,
-                '图书标签：', _tags,
-                '图书简介：', _intro
+                # '图书评分：', _rating,
+                # '图书标签：', _tags,
+                # '图书简介：', _intro
             )
 
             # 保存图书信息

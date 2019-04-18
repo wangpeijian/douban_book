@@ -51,11 +51,11 @@ def async_do():
 
 
 # 爬取代理的ip地址
-def scan_proxies_ip():
+def start():
     try:
         proxies_thread = threading.Thread(target=async_do)
         proxies_thread.setName("proxies-loader")
         proxies_thread.start()
     except Exception as e:
         info("代理扫描任务异常：", repr(e))
-        scan_proxies_ip()
+        start()

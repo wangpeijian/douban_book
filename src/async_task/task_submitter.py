@@ -18,11 +18,11 @@ def async_do():
 
 
 # 爬取代理的ip地址
-def scan():
+def start():
     try:
         proxies_thread = threading.Thread(target=async_do)
-        proxies_thread.setName("task-loader")
+        proxies_thread.setName("task-submitter")
         proxies_thread.start()
     except Exception as e:
         info("提交任务异常：", repr(e))
-        scan()
+        start()

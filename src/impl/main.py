@@ -1,9 +1,8 @@
 from lxml import etree
 
+from async_task import task_submitter, tag_loader, proxies_loader
 from db import mysql
-from impl import book_scan
 from impl import http
-from impl import task_loader
 from repertory.todo_tags import put_tags
 from util.logger import info
 
@@ -55,14 +54,17 @@ def increment_entry():
     if done_size == 0 and todo_size == 0:
         get_init_tags()
 
+    # 开启代理地址加载任务
+    proxies_loader.start()
+
     # 开启线程加载待办任务
-    task_loader.load_task()
+    tag_loader.start()
 
     # 扫描待办任务
-    book_scan.scan()
+    task_submitter.start()
 
 
 # 测试入口
 def test_entry():
     put_tags("科幻", 456)
-    book_scan.scan()
+    task_submitter.start()
