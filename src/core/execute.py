@@ -1,9 +1,14 @@
+import threading
+
 from lxml import etree
 
 from db import mysql
 from impl import http
 from util.logger import info
 from util.str_tool import escape_url
+
+# 添加图书标签时需要，防止重复的标签进入数据库
+add_tag_lock = threading.Lock()
 
 
 class Execute:
@@ -16,9 +21,14 @@ class Execute:
     # 记录代办的标签列表
     @staticmethod
     def record_todo_tags(tags):
+        # 保证只有一个线程执行tag添加操作
+        add_tag_lock.acquire()
+
         for tag in tags:
             if not mysql.has_tag(tag):
                 mysql.add_tag(tag)
+
+        add_tag_lock.release()
 
     def load_tag(self, tag, page_start):
         url = 'https://book.douban.com/tag/' + escape_url(tag) + '?start=' + str(page_start) + '&type=T'

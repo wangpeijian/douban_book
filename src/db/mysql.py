@@ -37,7 +37,7 @@ def add_tag(name):
     connection = get_con()
     cursor = connection.cursor()
 
-    sql = """insert into tags(name, done, page_start) values ("%s", %s, 0)""" % (name, 0)
+    sql = """insert into tags(name, done, page_start) values ("%s", 0, 0)""" % name
 
     try:
         cursor.execute(sql)
