@@ -21,7 +21,7 @@ def async_do():
             time.sleep(proxies_thread_cycle)
             continue
 
-        url = 'https://www.xicidaili.com/wn/%s' % i
+        url = 'https://www.xicidaili.com/nn/%s' % i
         info(url)
         html = http.req_url(url)
         dom = etree.HTML(html)
@@ -34,7 +34,7 @@ def async_do():
             for item in lines:
                 tds = item.xpath('./td/text()')
                 if len(tds) != 0:
-                    add_proxies_ip(tds[0] + ":" + tds[1])
+                    add_proxies_ip(tds[5].lower() + "://" + tds[0] + ":" + tds[1])
 
             info("拉取新的ip地址后，待选的ip地址数量:", len(PROXIES_IP))
             # 加入新的代理地址唤醒工作线程

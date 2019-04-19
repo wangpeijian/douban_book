@@ -12,7 +12,7 @@ db_password = 'root'
 db_data_base = 'douban'
 
 # 启动的工作线程数量
-workers = 20
+workers = 5
 
 # 线程池缓存任务数
 thread_pool_size = 5

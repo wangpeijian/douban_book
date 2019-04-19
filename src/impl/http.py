@@ -7,6 +7,7 @@ from core.blocker import WORKER_WAIT
 from core.const import USER_AGENTS
 from repertory.proxies_address import get_proxies_ip, remove_proxies_ip, add_effective_proxies_ip
 from util.logger import error
+from util.str_tool import split_proxies
 from util.url_tool import is_douban, is_xici, is_douban_list, is_douban_detail
 
 
@@ -16,8 +17,7 @@ def req_url(url):
 
         # 豆瓣请求添加代理限制，必须使用代理访问
         if is_douban(url) and proxies_ip is None:
-            # html = requests.get(url, headers=headers).text
-            # 没有代理地址可以用，需要休眠处理，防止本地ip被封
+            # 没有代理地址可以用，需要阻塞处理，防止本地ip被封
             WORKER_WAIT.wait()
             continue
 
@@ -32,7 +32,8 @@ def req_url(url):
         proxies = {}
 
         if proxies_ip is not None:
-            proxies['https'] = proxies_ip
+            agreement, location = split_proxies(proxies_ip)
+            proxies[agreement] = location
 
         try:
             html = requests.get(url, proxies=proxies, timeout=5, headers=headers).text
@@ -86,8 +87,10 @@ def check_douban_result(url, dom, proxies_ip):
 
     # 校验详情页面是否成功
     if is_douban_detail(url):
-        error_list = dom.xpath('//*[@id="db-tags-section"]/h2/span/text()')
-        if "".join(error_list).find('豆瓣成员常用的标签') == -1:
+        buy_list = dom.xpath('//*[@id="buyinfo"]/div/span/a/span/text()')
+        tag_list = dom.xpath('//*[@id="db-tags-section"]/h2/span/text()')
+
+        if "".join(buy_list).find('加入购书单') == -1 and "".join(tag_list).find('豆瓣成员常用的标签') == -1:
             error(url, ",详情页面查询数据异常")
             return True
 

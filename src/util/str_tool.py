@@ -10,3 +10,8 @@ def escape_str(string):
 def escape_url(string):
     string = string.replace('/', "%E2%88%95")
     return string
+
+
+def split_proxies(http_string):
+    array = http_string.split("://")
+    return array[0], array[1]

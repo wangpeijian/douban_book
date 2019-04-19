@@ -10,7 +10,7 @@ PROXIES_IP = []
 EFFECTIVE_PROXIES_IP = []
 
 # 记录豆瓣接口可使用的代理地址，豆瓣使用的代理地址和西刺的代理地址可能屏蔽的不一致，防止删掉能用的代理地址
-EFFECTIVE_PROXIES_IP_DOU_BAN = ['121.40.78.138:3128']
+EFFECTIVE_PROXIES_IP_DOU_BAN = []
 
 
 def remove_proxies_ip(url, proxies_ip):
@@ -19,10 +19,10 @@ def remove_proxies_ip(url, proxies_ip):
         if proxies_ip in EFFECTIVE_PROXIES_IP_DOU_BAN:
             EFFECTIVE_PROXIES_IP_DOU_BAN.remove(proxies_ip)
 
-    # 西刺屏蔽
-    if is_xici(url):
-        if proxies_ip in EFFECTIVE_PROXIES_IP:
-            EFFECTIVE_PROXIES_IP.remove(proxies_ip)
+    # 西刺屏蔽 --- 西刺代理成功访问的地址不移除，防止本地ip被屏蔽
+    # if is_xici(url):
+    # if proxies_ip in EFFECTIVE_PROXIES_IP:
+    # EFFECTIVE_PROXIES_IP.remove(proxies_ip)
 
     if proxies_ip in PROXIES_IP:
         PROXIES_IP.remove(proxies_ip)
@@ -37,6 +37,7 @@ def get_proxies_ip(url):
     # 西刺获取
     if is_xici(url):
         if len(EFFECTIVE_PROXIES_IP) > 0:
+            info("西刺代理可以使用的代理地址列表：", EFFECTIVE_PROXIES_IP)
             return random.choice(EFFECTIVE_PROXIES_IP)
 
     if len(PROXIES_IP) > 0:
