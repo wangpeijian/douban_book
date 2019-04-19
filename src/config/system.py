@@ -28,3 +28,6 @@ proxies_thread_cycle = 5
 
 # 西刺代理地址n页后从第一页开始查找
 proxies_page_loop = 100
+
+# 使用本地地址访问西刺代理时最小访问间隔
+proxies_access_frequency = 30

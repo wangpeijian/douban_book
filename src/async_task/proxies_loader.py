@@ -3,6 +3,7 @@ import time
 
 from lxml import etree
 
+from config.system import proxies_access_frequency
 from config.system import proxies_ip_max
 from config.system import proxies_page_loop
 from config.system import proxies_thread_cycle
@@ -27,8 +28,8 @@ def async_do():
         current_time = time.time()
         if time_stamp is 0:
             time_stamp = current_time
-        elif current_time - time_stamp < 30 and get_proxies_ip() is None:
-            time.sleep(30 - (current_time - time_stamp))
+        elif current_time - time_stamp < proxies_access_frequency and get_proxies_ip() is None:
+            time.sleep(proxies_access_frequency - (current_time - time_stamp))
 
         url = 'https://www.xicidaili.com/nn/%s' % i
         info(url)
