@@ -14,4 +14,4 @@ def escape_url(string):
 
 def split_proxies(http_string):
     array = http_string.split("://")
-    return array[0], array[1]
+    return array[0].lower(), array[1]
