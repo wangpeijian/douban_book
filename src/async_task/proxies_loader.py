@@ -9,7 +9,7 @@ from config.system import proxies_page_loop
 from config.system import proxies_thread_cycle
 from core.blocker import wake_up_worker
 from impl import http
-from repertory.proxies_address import PROXIES_IP, add_proxies_ip, get_proxies_ip
+from repertory.proxies_address import PROXIES_IP, add_proxies_ip
 from util.logger import info, error
 
 
@@ -28,7 +28,7 @@ def async_do():
         current_time = time.time()
         if time_stamp is 0:
             time_stamp = current_time
-        elif current_time - time_stamp < proxies_access_frequency and get_proxies_ip() is None:
+        elif current_time - time_stamp < proxies_access_frequency:
             time.sleep(proxies_access_frequency - (current_time - time_stamp))
 
         url = 'https://www.xicidaili.com/nn/%s' % i

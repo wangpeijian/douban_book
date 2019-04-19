@@ -7,7 +7,7 @@ from util.url_tool import is_douban, is_xici
 PROXIES_IP = []
 
 # 记录执行成功过的代理地址，获取地址时优先从成功过的地址获取
-EFFECTIVE_PROXIES_IP = []
+EFFECTIVE_PROXIES_IP = [None]
 
 # 记录豆瓣接口可使用的代理地址，豆瓣使用的代理地址和西刺的代理地址可能屏蔽的不一致，防止删掉能用的代理地址
 EFFECTIVE_PROXIES_IP_DOU_BAN = []
