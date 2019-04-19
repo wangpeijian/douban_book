@@ -1,4 +1,5 @@
 import random
+import time
 
 import requests
 from lxml import etree
@@ -6,13 +7,17 @@ from lxml import etree
 from core.blocker import WORKER_WAIT
 from core.const import USER_AGENTS
 from repertory.proxies_address import get_proxies_ip, remove_proxies_ip, add_effective_proxies_ip
-from util.logger import error
+from util.logger import error, info
 from util.str_tool import split_proxies
-from util.url_tool import is_douban, is_xici, is_douban_list, is_douban_detail
+from util.url_tool import is_douban, is_xici, is_douban_list
 
 
 def req_url(url):
+    times = 0
+
     while True:
+        times = times + 1
+
         proxies_ip = get_proxies_ip(url)
 
         # 豆瓣请求添加代理限制，必须使用代理访问
@@ -20,6 +25,12 @@ def req_url(url):
             # 没有代理地址可以用，需要阻塞处理，防止本地ip被封
             WORKER_WAIT.wait()
             continue
+
+        if is_xici(url):
+            info("西刺代理访问重复，", times, '次，休眠10s再次重试')
+            # 防止接口访问频次过快
+            if times > 0:
+                time.sleep(10)
 
         headers = {
             'User-Agent': random.choice(USER_AGENTS),
@@ -78,6 +89,11 @@ def check_douban_result(url, dom, proxies_ip):
         error(url, ",403访问拒绝")
         return True
 
+    error_ip = dom.xpath('//body/text()')
+    if "".join(error_ip).find('检测到有异常请求从你的 IP 发出') != -1:
+        error(url, ",检测到有异常请求从你的IP发出")
+        return True
+
     # 校验列表是否查询成功
     if is_douban_list(url):
         error_list = dom.xpath('//*[@id="content"]/h1/text()')
@@ -86,13 +102,14 @@ def check_douban_result(url, dom, proxies_ip):
             return True
 
     # 校验详情页面是否成功
-    if is_douban_detail(url):
-        buy_list = dom.xpath('//*[@id="buyinfo"]/div/span/a/span/text()')
-        tag_list = dom.xpath('//*[@id="db-tags-section"]/h2/span/text()')
-
-        if "".join(buy_list).find('加入购书单') == -1 and "".join(tag_list).find('豆瓣成员常用的标签') == -1:
-            error(url, ",详情页面查询数据异常")
-            return True
+    # if is_douban_detail(url):
+    #     buy_list = dom.xpath('//*[@id="buyinfo"]/div/span/a/span/text()')
+    #     tag_list = dom.xpath('//*[@id="db-tags-section"]/h2/span/text()')
+    #     title = dom.xpath('//*[@id="wrapper"]/h1/span/text()')
+    #
+    #     if "".join(buy_list).find('加入购书单') == -1 and "".join(tag_list).find('豆瓣成员常用的标签') == -1:
+    #         error(url, ",详情页面查询数据异常") and len(title) == 0
+    #         return True
 
     return False
 
@@ -100,7 +117,7 @@ def check_douban_result(url, dom, proxies_ip):
 # 校验西刺代理返回结果
 def check_xicidaili_result(url, dom, proxies_ip):
     if dom is None:
-        error(url, ",西刺代理页面访问异常")
+        error(url, ",西刺代理页面访问异常,", proxies_ip)
         return True
 
     return False

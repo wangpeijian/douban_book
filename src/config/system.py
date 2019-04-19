@@ -24,7 +24,7 @@ collection_tag_page_size = 5
 proxies_ip_max = 50
 
 # 代理线程,当前代理地址数量超出最大值时,代理线程的一个休眠周期（s）
-proxies_thread_cycle = 5
+proxies_thread_cycle = 30
 
 # 西刺代理地址n页后从第一页开始查找
 proxies_page_loop = 100

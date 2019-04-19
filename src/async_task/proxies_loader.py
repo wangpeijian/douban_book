@@ -3,7 +3,6 @@ import time
 
 from lxml import etree
 
-from config.system import proxies_access_frequency
 from config.system import proxies_ip_max
 from config.system import proxies_page_loop
 from config.system import proxies_thread_cycle
@@ -14,8 +13,6 @@ from util.logger import info, error
 
 
 def async_do():
-    time_stamp = 0
-
     i = 1
     while True:
         # 如果当前代理地址过多则空转
@@ -23,13 +20,6 @@ def async_do():
         if len(PROXIES_IP) > proxies_ip_max:
             time.sleep(proxies_thread_cycle)
             continue
-
-        # 防止接口访问频次过快
-        current_time = time.time()
-        if time_stamp is 0:
-            time_stamp = current_time
-        elif current_time - time_stamp < proxies_access_frequency:
-            time.sleep(proxies_access_frequency - (current_time - time_stamp))
 
         url = 'https://www.xicidaili.com/nn/%s' % i
         info(url)
